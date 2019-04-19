@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/tools.js"></script>
+		<style type="text/css">
+			.aa{
+				width:400px;
+				height: 300px;
+				background: darkseagreen;
+				position: relative;
+			}
+			.ac{
+				background: #fff;
+				width: 100%;
+				height: 40px;
+				font-size: 28px;
+				line-height: 40px;
+				text-align: center;
+				margin-top: -5px;
+			}
+			.input{
+				width: 250px;
+				height: 20px;
+				display: block;
+				margin-left: 40px;
+			}
+			.text{
+				width: 300px;
+				height: 100px;
+				margin-left: 50px;
+				display: block;
+				margin-top: 5px;
+			}
+			.btn{
+				margin-left: 50px;
+				background: #fff;
+				border: none;
+			}
+			.span{
+				cursor: pointer;
+				border: 1px solid #000;
+				position: absolute;
+				right: 0;
+				top: 40px;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<input type="button" name="" id="btn1" value="发布微博" />
+		<div class="box">
+			
+		</div>
+		<div class="news"></div>
+		<script type="text/javascript">
+			function Weibo(btn){
+				this.btn1=document.querySelector(btn);
+				this.init();
+				
+			}
+			Weibo.prototype.init=function(){
+				this.weibo=document.querySelector(".box");
+				this.news=document.querySelector(".news")
+				this.bindEvents();
+			}
+			Weibo.prototype.bindEvents=function(){
+				var _this=this;
+				this.btn1.onclick=function(){
+					console.log(_this.weibo);
+					_this.weibo.classList.add("aa");
+					_this.weibo.innerHTML =
+					'<p class="ac">微博</p>'+'用户名：<span class="span">X</span><input type="text" class="input"/>'+'<textarea class="text"></textarea>'
+					+'<input type="button" class="btn" value="发布" />';
+					tools.showCenter(_this.weibo);
+				}
+				this.weibo.onclick=function(e){
+					let target=e.target;
+					//console.log(target)
+					if(target.nodeName=="SPAN"){
+						//console.log(_this.weibo)
+						_this.weibo.remove();
+					}
+					else if(target.className=="btn"){
+						_this.weibo.remove();
+						_this.text=_this.weibo.querySelector("textarea");
+						_this.news.innerHTML=_this.text.innerHTML;
+					}
+					
+				}
+			}
+			
+			
+			new Weibo("#btn1");
+		</script>
+	</body>
+</html>

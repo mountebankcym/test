@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			li {
+				list-style: none;
+			}
+
+			#div1 {
+				width: 850px;
+				height: 500px;
+				margin: 50px auto;
+				overflow: hidden;
+				position: relative;
+			}
+
+			#div1 ul {
+				width: 5950px;
+				height: 500px;
+				position: absolute;
+				left: -850px;
+			}
+
+			#div1 ul li {
+				height: 500px;
+				float: left;
+			}
+			/* @keyframes qiehuan{
+				from{margin-left: 0px;}
+				to{margin-left: -850px;}
+			} */
+			
+			#div1 ol {
+				position: absolute;
+				right: 10%;
+				bottom: 10px;
+				z-index: 6
+			}
+
+			#div1 ol li {
+				width: 20px;
+				height: 20px;
+				background: #fff;
+				margin-left: 5px;
+				float: left;
+				line-height: 20px;
+				text-align: center;
+				cursor: pointer;
+			}
+
+			#div1 ol li.ac {
+				background: red;
+				color: #fff;
+			}
+
+			#div1>a {
+				text-decoration: none;
+				position: absolute;
+				top: 50%;
+				margin-top: -10px;
+				height: 40px;
+				line-height: 32px;
+				text-align: center;
+				width: 40px;
+				font-size: 40px;
+				vertical-align: middle;
+				color: #fff;
+				background: rgba(0, 0, 0, 0.5);
+				z-index: 6;
+			}
+
+			#goPrev {
+				left: 0;
+			}
+
+			#goNext {
+				right: 0;
+			}
+
+			img {
+				width: 850px;
+				height: 500px;
+			}
+		</style>
+		<script src="js/tools.js"></script>
+	</head>
+	<body>
+		<div id="div1">
+			<ul>
+				<li><a href="javascript:;"><img src="images/5.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/1.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/2.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/3.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/4.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/5.jpg" /></a></li>
+				<li><a href="javascript:;"><img src="images/1.jpg" /></a></li>
+			</ul>
+			<ol>
+				<li class="ac">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ol>
+			<a href="javascript:;" id="goPrev">&laquo;</a>
+			<a href="javascript:;" id="goNext">&raquo;</a>
+		</div>
+		<script>
+			function LunBo(selector) {
+				this.con = document.querySelector(selector);
+				this.init();
+				//console.log(this.con);
+				this.autoPlay();
+			}
+			LunBo.prototype.init = function() {
+				this.btns = this.con.querySelector("ol").children;
+				this.ul = document.querySelector("ul");
+				this.imgs = this.con.querySelector("ul").children;
+				this.goPrev = this.con.querySelector("#goPrev");
+				this.goNext = this.con.querySelector("#goNext");
+				//console.log(this.btns);
+				this.bindEvents();
+				this.index = 0;
+				this.lastIndex = 0;
+				this.timer = null;
+			}
+			LunBo.prototype.bindEvents = function() {
+				let _this = this;
+				Array.from(this.btns).forEach(function(btn, i) {
+					btn.onclick = function() {
+						_this.index = i;
+						//						console.log(this);
+						_this.changeImg();
+					}
+				});
+				this.goNext.onclick = function() {
+					if (++_this.index === _this.btns.length) {
+						_this.ul.style.left = 0;
+						_this.index = 0;
+					}
+					_this.changeImg();
+
+				}
+				this.goPrev.onclick = function() {
+					if (--_this.index < 0) {
+						_this.ul.style.left = -(_this.btns.length + 1) * 850 + "px";
+						_this.index = _this.btns.length - 1;
+					}
+					_this.changeImg();
+				}
+				this.con.onmouseenter = function() {
+					//console.log(1);
+					clearInterval(_this.timer);
+				}
+				this.con.onmouseleave = function() {
+					_this.autoPlay();
+				}
+			}
+			LunBo.prototype.changeImg = function() {
+				this.btns[this.lastIndex].classList.remove("ac");
+				this.btns[this.index].classList.add("ac");
+				this.lastIndex = this.index;
+				tools.linearMove(this.ul, 'left', -(this.index + 1) * 850, 300);
+			}
+			LunBo.prototype.autoPlay = function() {
+				let _thiss = this;
+				this.timer = setInterval(function() {
+					_thiss.goNext.onclick();
+				}, 2000);
+			}
+
+			new LunBo("#div1");
+		</script>
+	</body>
+</html>
